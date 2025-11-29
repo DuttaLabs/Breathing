@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>静心呼吸调节器</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+            z-index: 1;
+            /* 动画定义：总时长16秒 (4秒吸+4秒屏+4秒呼+4秒屏) */
+            animation: breathe-animation 16s infinite ease-in-out;
+        }
+
+        /* 外部光晕 */
+        .halo {
+            width: 220px;
+            height: 220px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            position: absolute;
+            z-index: 0;
+            animation: halo-animation 16s infinite ease-in-out;
+        }
+
+        .text {
+            z-index: 2;
+            font-size: 24px;
+            color: #555;
+            font-weight: 300;
+            position: absolute;
+            animation: text-change 16s infinite;
+        }
+
+        @keyframes breathe-animation {
+            0% { transform: scale(1); }        /* 开始吸气 */
+            25% { transform: scale(1.5); }     /* 吸气结束/开始屏气 */
+            50% { transform: scale(1.5); }     /* 屏气结束/开始呼气 */
+            75% { transform: scale(1); }       /* 呼气结束/开始屏气 */
+            100% { transform: scale(1); }      /* 循环结束 */
+        }
+
+        @keyframes halo-animation {
+            0% { transform: scale(1); opacity: 0.5; }
+            25% { transform: scale(1.6); opacity: 0.1; }
+            50% { transform: scale(1.6); opacity: 0.1; }
+            75% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+
+        @keyframes text-change {
+            0% { content: "吸气"; color: #4CAF50; }
+            24% { content: "吸气"; color: #4CAF50; opacity: 1;} 
+            25% { content: "保持"; color: #2196F3; opacity: 0; }
+            26% { content: "保持"; color: #2196F3; opacity: 1; }
+            49% { content: "保持"; color: #2196F3; opacity: 1; }
+            50% { content: "呼气"; color: #FF5722; opacity: 0; }
+            51% { content: "呼气"; color: #FF5722; opacity: 1; }
+            74% { content: "呼气"; color: #FF5722; opacity: 1; }
+            75% { content: "保持"; color: #9E9E9E; opacity: 0; }
+            76% { content: "保持"; color: #9E9E9E; opacity: 1; }
+            99% { content: "保持"; color: #9E9E9E; opacity: 1; }
+            100% { content: "吸气"; opacity: 0; }
+        }
+
+        /* 使用JS来动态更改文字，因为CSS content动画在某些浏览器兼容性不好，
+           这里为了简单直接用CSS动画模拟，若不显示文字请看圆圈大小即可 */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="halo"></div>
+        <div class="circle"></div>
+        <div class="text" id="instruction">跟随圆圈</div>
+    </div>
+    
+    <p style="margin-top: 250px; color: #666;">吸气 (4s) - 保持 (4s) - 呼气 (4s) - 保持 (4s)</p>
+
+    <script>
+        // 简单的脚本辅助文字显示，确保兼容性
+        const textElement = document.getElementById('instruction');
+        const cycleTime = 16000; // 16秒一个循环
+
+        function updateText() {
+            setTimeout(() => { textElement.innerText = "吸气"; }, 0);
+            setTimeout(() => { textElement.innerText = "保持"; }, 4000);
+            setTimeout(() => { textElement.innerText = "呼气"; }, 8000);
+            setTimeout(() => { textElement.innerText = "保持"; }, 12000);
+        }
+
+        updateText();
+        setInterval(updateText, cycleTime);
+    </script>
+</body>
+</html>
